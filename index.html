@@ -101,11 +101,11 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
   <div id="map"></div>
   <div class="map-overlay">
     <h3>What You're Seeing</h3>
-    <p>Green zones indicate neighborhoods where homeowners have expressed willingness to sell off-market. Register below to get matched with available properties.</p>
+    <p>Green zones indicate neighborhoods where homeowners have expressed willingness to sell off-market, through The BLK Group at LPT Realty. Register below to get matched with available properties and connect with a BLK Group agent now!</p>
   </div>
   <div class="map-legend">
     <div class="leg-title">MAP KEY</div>
-    <div class="leg-item"><div class="leg-dot" style="background:#00ff88;box-shadow:0 0 6px rgba(0,255,136,0.4)"></div>Off-Market Activity</div>
+    <div class="leg-item"><div class="leg-dot" style="background:#00ff88;box-shadow:0 0 6px rgba(0,255,136,0.4)"></div>Homes Available Off Market!</div>
     <div class="leg-item"><div class="leg-dot" style="background:#333;border:1px solid #555"></div>Neighborhood</div>
   </div>
 </div>
@@ -196,9 +196,10 @@ let map,subdivisions=[],subCounts={};
 
 async function init(){
   const{data:subs}=await sb.from('subdivisions').select('id,name,display_name,center_lat,center_lng,boundary_geojson').eq('market_id',CHENAL).order('name');
+  // Load parcel locations (center_lat, center_lng only - NO owner data, NO addresses)
   let allP=[],from=0;
   while(true){
-    const{data:b}=await sb.from('parcels').select('subdivision_id').eq('market_id',CHENAL).range(from,from+999);
+    const{data:b}=await sb.from('parcels').select('subdivision_id,center_lat,center_lng').eq('market_id',CHENAL).range(from,from+999);
     if(!b||!b.length)break;allP.push(...b);if(b.length<1000)break;from+=1000;
   }
   allP.forEach(p=>{subCounts[p.subdivision_id]=(subCounts[p.subdivision_id]||0)+1;});
@@ -208,25 +209,51 @@ async function init(){
   });
   document.getElementById('offMarketCount').textContent=allP.length.toLocaleString();
   document.getElementById('subCount').textContent=subdivisions.length;
-  initMap();buildSubChecklist();
+  initMap(allP);buildSubChecklist();
 }
 
 function cleanName(s){return(s.display_name||s.name).replace('CHENAL VALLEY ','').replace(' - LITTLE ROCK','').replace(/\s+/g,' ').trim();}
 
-function initMap(){
+function initMap(parcels){
   map=L.map('map',{center:[34.78,-92.48],zoom:12,zoomControl:true,scrollWheelZoom:false});
   L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{maxZoom:18}).addTo(map);
   const bounds=[];
+
+  // Draw subdivision boundaries
+  subdivisions.forEach(sub=>{
+    if(sub.boundary_geojson){try{L.geoJSON(sub.boundary_geojson,{style:{color:'#1a3a1a',weight:1,fillOpacity:0.08,fillColor:'#00ff88'}}).addTo(map);}catch(e){}}
+  });
+
+  // Draw individual parcel dots (slightly randomized so exact locations aren't revealed)
+  parcels.forEach(p=>{
+    if(!p.center_lat||!p.center_lng) return;
+    // Add small random offset (roughly 30-50 meters) to obscure exact address
+    const jitterLat = (Math.random()-0.5)*0.0006;
+    const jitterLng = (Math.random()-0.5)*0.0006;
+    const lat = p.center_lat + jitterLat;
+    const lng = p.center_lng + jitterLng;
+    L.circleMarker([lat,lng],{
+      radius:4,
+      fillColor:'#00ff88',
+      fillOpacity:0.5,
+      color:'#00ff88',
+      weight:0.5,
+      opacity:0.4,
+      interactive:false
+    }).addTo(map);
+    bounds.push([lat,lng]);
+  });
+
+  // Pulsing activity markers at subdivision centers with tooltips
   subdivisions.forEach(sub=>{
     const count=subCounts[sub.id]||0;
-    if(sub.boundary_geojson){try{L.geoJSON(sub.boundary_geojson,{style:{color:'#1a3a1a',weight:1,fillOpacity:0.08,fillColor:'#00ff88'}}).addTo(map);}catch(e){}}
     if(sub.center_lat&&sub.center_lng){
       const sz=Math.min(24,Math.max(10,count/5));
       const icon=L.divIcon({className:'',html:`<div class="pulse-marker" style="width:${sz}px;height:${sz}px"></div>`,iconSize:[sz,sz]});
       L.marker([sub.center_lat,sub.center_lng],{icon}).bindTooltip(`${cleanName(sub)}<br><span style="color:#00ff88">${count} properties</span>`,{className:'dark-tooltip'}).addTo(map);
-      bounds.push([sub.center_lat,sub.center_lng]);
     }
   });
+
   if(bounds.length)map.fitBounds(bounds,{padding:[40,40]});
 }
 
