@@ -361,7 +361,7 @@ const SUPABASE_URL='https://fzlwkbhpsklsgkinwljt.supabase.co';
 const SUPABASE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ6bHdrYmhwc2tsc2draW53bGp0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIwNTE0MzEsImV4cCI6MjA4NzYyNzQzMX0.lc6A8RCUySU0Hn9MjPcR9rH1c8DjSj_A7MV8JuLvwik';
 const sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 const CHENAL='74262c26-a193-41b0-84ec-a8df21c4fcda';
-const SHEET_URL='https://script.google.com/macros/s/AKfycbxGoFeTgxMhh9Z43LlW8qOrIoEoauGif6jtQAOIS2SACkMwSOm_TQxgUg6BXd90-oIm/exec';
+const SHEET_URL='https://script.google.com/macros/s/AKfycbwdXX0AT7DsGMvOTcj_0s8hCuZ0g5m-4kjwSctMwbTAxJ1ms7X9Uad_QKQicv7RbKrh4Q/exec';
 const SKIP=['COMMERCIAL','PROFESSIONAL','LIQUOR','1700 KIRK'];
 let subdivisions=[],subCounts={},parcels=[],mapsBuilt={};
 
@@ -493,10 +493,14 @@ async function handleBuyerSubmit(e){
   };
   try{await sb.from('buyers').insert([d]);}catch(err){console.log('DB:',err);}
   try{
-    const fd=new FormData();fd.append('date',new Date().toISOString());
-    fd.append('name',d.first_name+' '+d.last_name);fd.append('email',d.email);fd.append('phone',d.phone);
-    fd.append('source','MakeChenalHome.com - Buyer Lead');
-    fd.append('notes','SUBDIVISIONS: '+selectedSubs.join(', ')+(d.price_min||d.price_max?' | PRICE: '+(d.price_min||'?')+'-'+(d.price_max||'?'):'')+(d.timeline?' | TIMELINE: '+d.timeline:'')+(d.notes?' | NOTES: '+d.notes:''));
+    const fd=new FormData();
+    fd.append('domain','makechenalhome.com');fd.append('type','buyer');
+    fd.append('date',new Date().toISOString());
+    fd.append('first_name',d.first_name);fd.append('last_name',d.last_name);
+    fd.append('email',d.email);fd.append('phone',d.phone);
+    fd.append('neighborhoods',selectedSubs.join(', '));
+    fd.append('price_min',d.price_min||'');fd.append('price_max',d.price_max||'');
+    fd.append('timeline',d.timeline||'');fd.append('notes',d.notes||'');
     fetch(SHEET_URL,{method:'POST',body:fd,mode:'no-cors'});
   }catch(err){}
   document.getElementById('buyerForm').style.display='none';
@@ -545,11 +549,16 @@ async function handleSellerSubmit(e){
 
   // Google Sheets
   try{
-    const fd=new FormData();fd.append('date',new Date().toISOString());
-    fd.append('name',d.first_name+' '+d.last_name);fd.append('email',d.email);fd.append('phone',d.phone);
-    fd.append('address',d.address);
-    fd.append('source','MakeChenalHome.com - SELLER Lead'+(wants30Day?' - WANTS 30 DAY STRATEGY':''));
-    fd.append('notes','ADDRESS: '+d.address+(d.neighborhood?' | NEIGHBORHOOD: '+d.neighborhood:'')+(d.asking_price?' | ASKING: $'+d.asking_price.toLocaleString():'')+(d.timeline?' | TIMELINE: '+d.timeline:'')+(d.bedrooms?' | '+d.bedrooms+'bd/'+d.bathrooms+'ba':'')+(d.notes?' | NOTES: '+d.notes:''));
+    const fd=new FormData();
+    fd.append('domain','makechenalhome.com');fd.append('type','seller');
+    fd.append('date',new Date().toISOString());
+    fd.append('first_name',d.first_name);fd.append('last_name',d.last_name);
+    fd.append('email',d.email);fd.append('phone',d.phone);
+    fd.append('address',d.address);fd.append('neighborhood',neighborhood||'');
+    fd.append('asking_price',askingPrice||'');fd.append('timeline',d.timeline||'');
+    fd.append('bedrooms',beds||'');fd.append('bathrooms',baths||'');
+    fd.append('wants_30day',wants30Day?'true':'false');
+    fd.append('notes',userNotes||'');
     fetch(SHEET_URL,{method:'POST',body:fd,mode:'no-cors'});
   }catch(err){}
 
