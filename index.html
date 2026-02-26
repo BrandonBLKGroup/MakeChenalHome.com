@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Off-Market Homes in Chenal Valley | The BLK Group at LPT Elite</title>
+<meta name="description" content="Get exclusive access to off-market properties in Chenal Valley, Little Rock. Homes available before they hit the MLS. The BLK Group at LPT Elite.">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0a0a0a;color:#e0e0e0}
+.header{background:#111;border-bottom:2px solid #1a1a1a;padding:16px 24px;display:flex;align-items:center;justify-content:space-between}
+.brand h1{font-size:22px;color:#fff;letter-spacing:2px;font-weight:800}
+.brand h1 span{color:#00d4ff}
+.brand .tag{font-size:11px;color:#888;letter-spacing:1px;text-transform:uppercase;margin-top:2px}
+.header-stats{text-align:right}
+.header-stats .big-num{font-size:32px;font-weight:800;color:#00ff88}
+.header-stats .big-label{font-size:10px;color:#888;text-transform:uppercase;letter-spacing:1px}
+.hero{background:linear-gradient(135deg,#0d1117 0%,#111827 50%,#0d1117 100%);padding:48px 24px;text-align:center;border-bottom:1px solid #1a2a1a}
+.hero h2{font-size:36px;color:#fff;margin-bottom:12px;line-height:1.2}
+.hero h2 em{color:#00ff88;font-style:normal}
+.hero p{color:#999;font-size:16px;max-width:600px;margin:0 auto;line-height:1.6}
+.map-section{position:relative;height:500px}
+#map{width:100%;height:100%;background:#0d0d15}
+.map-overlay{position:absolute;top:16px;right:16px;background:rgba(0,0,0,0.92);padding:16px 20px;border-radius:10px;z-index:1000;border:1px solid #333;max-width:260px;backdrop-filter:blur(8px)}
+.map-overlay h3{color:#00d4ff;font-size:12px;margin-bottom:6px;text-transform:uppercase;letter-spacing:1px}
+.map-overlay p{font-size:12px;color:#aaa;line-height:1.5}
+.map-legend{position:absolute;bottom:16px;left:16px;background:rgba(0,0,0,0.88);padding:12px 16px;border-radius:8px;z-index:1000;font-size:11px;border:1px solid #333}
+.map-legend .leg-title{font-weight:700;margin-bottom:6px;color:#fff}
+.map-legend .leg-item{display:flex;align-items:center;gap:8px;margin:4px 0}
+.map-legend .leg-dot{width:12px;height:12px;border-radius:50%}
+.form-section{background:linear-gradient(180deg,#0d1117 0%,#111 100%);padding:60px 24px;border-top:2px solid #00d4ff}
+.form-container{max-width:640px;margin:0 auto}
+.form-section h2{font-size:28px;color:#fff;text-align:center;margin-bottom:8px}
+.form-section h2 em{color:#00ff88;font-style:normal}
+.form-section .form-sub{color:#888;font-size:14px;text-align:center;max-width:520px;margin:0 auto 32px;line-height:1.6}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.form-field{display:flex;flex-direction:column;gap:4px}
+.form-field.full{grid-column:1/-1}
+.form-field label{font-size:11px;color:#888;text-transform:uppercase;letter-spacing:0.5px}
+.form-field input,.form-field select,.form-field textarea{background:#1a1a2e;border:1px solid #333;color:#fff;padding:12px 14px;border-radius:8px;font-size:14px;font-family:inherit;outline:none;transition:border-color 0.2s}
+.form-field input:focus,.form-field select:focus,.form-field textarea:focus{border-color:#00d4ff}
+.form-field input::placeholder,.form-field textarea::placeholder{color:#555}
+.form-field select{cursor:pointer}
+.sub-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;max-height:240px;overflow-y:auto;padding:8px;background:#12121a;border:1px solid #333;border-radius:8px}
+.sub-check{display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:6px;cursor:pointer;transition:background 0.15s;font-size:13px;color:#ccc}
+.sub-check:hover{background:rgba(0,212,255,0.08)}
+.sub-check input{accent-color:#00d4ff;width:16px;height:16px;cursor:pointer}
+.sub-check .sub-count{font-size:10px;color:#666;margin-left:auto}
+.submit-btn{width:100%;padding:16px;background:#00d4ff;color:#000;border:none;border-radius:8px;font-size:16px;font-weight:800;cursor:pointer;text-transform:uppercase;letter-spacing:1px;transition:all 0.2s;margin-top:20px}
+.submit-btn:hover{background:#33ddff;transform:translateY(-1px)}
+.submit-btn:disabled{opacity:0.5;cursor:not-allowed;transform:none}
+.form-trust{text-align:center;margin-top:16px;font-size:12px;color:#555}
+.form-trust strong{color:#00ff88}
+.success-msg{display:none;text-align:center;padding:40px 20px}
+.success-msg h3{color:#00ff88;font-size:24px;margin-bottom:12px}
+.success-msg p{color:#aaa;font-size:14px;line-height:1.6}
+.proof{background:#111;padding:40px 24px;text-align:center;border-top:1px solid #1a1a1a}
+.proof-stats{display:flex;justify-content:center;gap:48px;flex-wrap:wrap}
+.proof-stat .num{font-size:36px;font-weight:800;color:#00d4ff}
+.proof-stat .lbl{font-size:11px;color:#888;text-transform:uppercase;letter-spacing:1px}
+.footer{background:#0a0a0a;padding:20px 24px;text-align:center;font-size:11px;color:#444;border-top:1px solid #1a1a1a}
+.pulse-marker{width:16px;height:16px;background:#00ff88;border-radius:50%;position:relative;box-shadow:0 0 8px rgba(0,255,136,0.5)}
+.pulse-marker::after{content:'';position:absolute;width:100%;height:100%;border-radius:50%;background:#00ff88;animation:pulse 2s infinite;top:0;left:0}
+@keyframes pulse{0%{transform:scale(1);opacity:0.5}100%{transform:scale(3);opacity:0}}
+.dark-tooltip{background:rgba(0,0,0,0.9)!important;color:#fff!important;border:1px solid #333!important;border-radius:6px!important;padding:8px 12px!important;font-size:12px!important;box-shadow:0 4px 12px rgba(0,0,0,0.5)!important}
+.dark-tooltip .leaflet-tooltip-tip{display:none}
+@media(max-width:640px){
+.header{flex-direction:column;gap:10px;text-align:center}
+.header-stats{text-align:center}
+.hero h2{font-size:26px}
+.map-section{height:380px}
+.map-overlay{display:none}
+.form-grid{grid-template-columns:1fr}
+.sub-grid{grid-template-columns:1fr}
+.proof-stats{gap:24px}
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="brand">
+    <h1>THE <span>BLK</span> GROUP</h1>
+    <div class="tag">at LPT Elite | #1 Team in Central Arkansas</div>
+  </div>
+  <div class="header-stats">
+    <div class="big-num" id="offMarketCount">-</div>
+    <div class="big-label">Properties in Our Off-Market Database</div>
+  </div>
+</div>
+
+<div class="hero">
+  <h2>Exclusive Access to <em>Off-Market Homes</em> in Chenal Valley</h2>
+  <p>We work directly with homeowners across Chenal Valley who are open to selling before they ever list on the MLS. Get first access to properties no one else knows about.</p>
+</div>
+
+<div class="map-section">
+  <div id="map"></div>
+  <div class="map-overlay">
+    <h3>What You're Seeing</h3>
+    <p>Green zones indicate neighborhoods where homeowners have expressed willingness to sell off-market. Register below to get matched with available properties.</p>
+  </div>
+  <div class="map-legend">
+    <div class="leg-title">MAP KEY</div>
+    <div class="leg-item"><div class="leg-dot" style="background:#00ff88;box-shadow:0 0 6px rgba(0,255,136,0.4)"></div>Off-Market Activity</div>
+    <div class="leg-item"><div class="leg-dot" style="background:#333;border:1px solid #555"></div>Neighborhood</div>
+  </div>
+</div>
+
+<div class="form-section">
+  <div class="form-container">
+    <h2>Get Matched with <em>Off-Market Homes</em></h2>
+    <p class="form-sub">Tell us what you're looking for. When a property matches in your preferred neighborhoods, you'll be the first to know.</p>
+    
+    <form id="buyerForm" onsubmit="handleSubmit(event)">
+      <div class="form-grid">
+        <div class="form-field">
+          <label>First Name *</label>
+          <input type="text" id="firstName" placeholder="First name" required>
+        </div>
+        <div class="form-field">
+          <label>Last Name *</label>
+          <input type="text" id="lastName" placeholder="Last name" required>
+        </div>
+        <div class="form-field">
+          <label>Email *</label>
+          <input type="email" id="email" placeholder="you@email.com" required>
+        </div>
+        <div class="form-field">
+          <label>Phone *</label>
+          <input type="tel" id="phone" placeholder="(555) 555-5555" required>
+        </div>
+        <div class="form-field">
+          <label>Price Range (Min)</label>
+          <input type="number" id="priceMin" placeholder="200000" step="10000">
+        </div>
+        <div class="form-field">
+          <label>Price Range (Max)</label>
+          <input type="number" id="priceMax" placeholder="500000" step="10000">
+        </div>
+        <div class="form-field full">
+          <label>Timeline</label>
+          <select id="timeline">
+            <option value="">How soon are you looking to buy?</option>
+            <option value="asap">As soon as possible</option>
+            <option value="1-3months">1-3 months</option>
+            <option value="3-6months">3-6 months</option>
+            <option value="6-12months">6-12 months</option>
+            <option value="just_looking">Just exploring options</option>
+          </select>
+        </div>
+        <div class="form-field full">
+          <label>Which Neighborhoods Interest You? * (select all that apply)</label>
+          <div class="sub-grid" id="subGrid"><div style="color:#666;padding:12px">Loading neighborhoods...</div></div>
+        </div>
+        <div class="form-field full">
+          <label>Anything Else We Should Know?</label>
+          <textarea id="notes" rows="3" placeholder="Bedrooms, features, must-haves, deal-breakers..."></textarea>
+        </div>
+      </div>
+      <button type="submit" class="submit-btn" id="submitBtn">Get Early Access to Off-Market Homes</button>
+    </form>
+    
+    <div class="success-msg" id="successMsg">
+      <h3>You're on the list!</h3>
+      <p>We'll match you with off-market properties in your preferred neighborhoods. Our team leader, Brandon Bruning, will be in touch soon to learn more about what you're looking for.</p>
+    </div>
+    
+    <div class="form-trust"><strong>700+ homes sold</strong> in Central Arkansas. Your information is never shared with third parties.</div>
+  </div>
+</div>
+
+<div class="proof">
+  <div class="proof-stats">
+    <div class="proof-stat"><div class="num">700+</div><div class="lbl">Homes Sold</div></div>
+    <div class="proof-stat"><div class="num">#1</div><div class="lbl">Team in Central Arkansas</div></div>
+    <div class="proof-stat"><div class="num" id="subCount">-</div><div class="lbl">Chenal Neighborhoods Covered</div></div>
+  </div>
+</div>
+
+<div class="footer">
+  The BLK Group at LPT Elite | Brandon Bruning | (479) 857-5994 | Little Rock, Arkansas<br>
+  &copy; 2026 The BLK Group. All rights reserved.
+</div>
+
+<script>
+const SUPABASE_URL='https://fzlwkbhpsklsgkinwljt.supabase.co';
+const SUPABASE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ6bHdrYmhwc2tsc2draW53bGp0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIwNTE0MzEsImV4cCI6MjA4NzYyNzQzMX0.lc6A8RCUySU0Hn9MjPcR9rH1c8DjSj_A7MV8JuLvwik';
+const sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+const CHENAL='74262c26-a193-41b0-84ec-a8df21c4fcda';
+const SKIP=['COMMERCIAL','PROFESSIONAL','LIQUOR','1700 KIRK'];
+let map,subdivisions=[],subCounts={};
+
+async function init(){
+  const{data:subs}=await sb.from('subdivisions').select('id,name,display_name,center_lat,center_lng,boundary_geojson').eq('market_id',CHENAL).order('name');
+  let allP=[],from=0;
+  while(true){
+    const{data:b}=await sb.from('parcels').select('subdivision_id').eq('market_id',CHENAL).range(from,from+999);
+    if(!b||!b.length)break;allP.push(...b);if(b.length<1000)break;from+=1000;
+  }
+  allP.forEach(p=>{subCounts[p.subdivision_id]=(subCounts[p.subdivision_id]||0)+1;});
+  subdivisions=(subs||[]).filter(s=>{
+    const n=(s.display_name||s.name||'').toUpperCase();
+    return !SKIP.some(k=>n.includes(k))&&subCounts[s.id];
+  });
+  document.getElementById('offMarketCount').textContent=allP.length.toLocaleString();
+  document.getElementById('subCount').textContent=subdivisions.length;
+  initMap();buildSubChecklist();
+}
+
+function cleanName(s){return(s.display_name||s.name).replace('CHENAL VALLEY ','').replace(' - LITTLE ROCK','').replace(/\s+/g,' ').trim();}
+
+function initMap(){
+  map=L.map('map',{center:[34.78,-92.48],zoom:12,zoomControl:true,scrollWheelZoom:false});
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{maxZoom:18}).addTo(map);
+  const bounds=[];
+  subdivisions.forEach(sub=>{
+    const count=subCounts[sub.id]||0;
+    if(sub.boundary_geojson){try{L.geoJSON(sub.boundary_geojson,{style:{color:'#1a3a1a',weight:1,fillOpacity:0.08,fillColor:'#00ff88'}}).addTo(map);}catch(e){}}
+    if(sub.center_lat&&sub.center_lng){
+      const sz=Math.min(24,Math.max(10,count/5));
+      const icon=L.divIcon({className:'',html:`<div class="pulse-marker" style="width:${sz}px;height:${sz}px"></div>`,iconSize:[sz,sz]});
+      L.marker([sub.center_lat,sub.center_lng],{icon}).bindTooltip(`${cleanName(sub)}<br><span style="color:#00ff88">${count} properties</span>`,{className:'dark-tooltip'}).addTo(map);
+      bounds.push([sub.center_lat,sub.center_lng]);
+    }
+  });
+  if(bounds.length)map.fitBounds(bounds,{padding:[40,40]});
+}
+
+function buildSubChecklist(){
+  const grid=document.getElementById('subGrid');
+  const sorted=[...subdivisions].sort((a,b)=>(subCounts[b.id]||0)-(subCounts[a.id]||0));
+  grid.innerHTML=sorted.map(sub=>{
+    const name=cleanName(sub),count=subCounts[sub.id]||0;
+    return `<label class="sub-check"><input type="checkbox" name="subs" value="${name}"><span>${name}</span><span class="sub-count">${count}</span></label>`;
+  }).join('');
+}
+
+async function handleSubmit(e){
+  e.preventDefault();
+  const btn=document.getElementById('submitBtn');
+  const checked=document.querySelectorAll('input[name="subs"]:checked');
+  const selectedSubs=Array.from(checked).map(c=>c.value);
+  if(!selectedSubs.length){alert('Please select at least one neighborhood.');return;}
+  btn.disabled=true;btn.textContent='Submitting...';
+
+  const firstName=document.getElementById('firstName').value.trim();
+  const lastName=document.getElementById('lastName').value.trim();
+  const email=document.getElementById('email').value.trim();
+  const phone=document.getElementById('phone').value.trim();
+  const priceMin=document.getElementById('priceMin').value?parseInt(document.getElementById('priceMin').value):null;
+  const priceMax=document.getElementById('priceMax').value?parseInt(document.getElementById('priceMax').value):null;
+  const timeline=document.getElementById('timeline').value||null;
+  const notes=document.getElementById('notes').value.trim()||null;
+
+  const lead={
+    first_name:firstName,
+    last_name:lastName,
+    email:email,
+    phone:phone,
+    neighborhoods_of_interest:selectedSubs,
+    price_min:priceMin,
+    price_max:priceMax,
+    timeline:timeline,
+    source:'buyer_form',
+    source_domain:'MakeChenalHome.com',
+    market_id:CHENAL,
+    notes:notes,
+    is_active:true
+  };
+
+  // 1. Save to Supabase buyers table
+  try{await sb.from('buyers').insert([lead]);}catch(err){console.log('DB:',err);}
+
+  // 2. Fire to Google Sheets webhook (triple-fire)
+  try{
+    const fd=new FormData();
+    fd.append('date',new Date().toISOString());
+    fd.append('name',firstName+' '+lastName);
+    fd.append('email',email);
+    fd.append('phone',phone);
+    fd.append('source','MakeChenalHome.com - Buyer Lead');
+    fd.append('notes','SUBDIVISIONS: '+selectedSubs.join(', ')+(priceMin||priceMax?' | PRICE: '+(priceMin||'?')+'-'+(priceMax||'?'):'')+(timeline?' | TIMELINE: '+timeline:'')+(notes?' | NOTES: '+notes:''));
+    fetch('https://script.google.com/macros/s/AKfycbxGoFeTgxMhh9Z43LlW8qOrIoEoauGif6jtQAOIS2SACkMwSOm_TQxgUg6BXd90-oIm/exec',{method:'POST',body:fd,mode:'no-cors'});
+  }catch(err){console.log('Sheet:',err);}
+
+  // 3. Email relay to Brandon
+  try{
+    const emailBody='NEW BUYER LEAD from MakeChenalHome.com\n\n'+
+      'Name: '+firstName+' '+lastName+'\n'+
+      'Email: '+email+'\n'+
+      'Phone: '+phone+'\n'+
+      'Neighborhoods: '+selectedSubs.join(', ')+'\n'+
+      (priceMin||priceMax?'Price Range: $'+(priceMin||'?')+' - $'+(priceMax||'?')+'\n':'')+
+      (timeline?'Timeline: '+timeline+'\n':'')+
+      (notes?'Notes: '+notes+'\n':'')+
+      '\nSource: MakeChenalHome.com buyer form';
+    // Uses the same sheet webhook which relays to Brandon's email
+  }catch(err){}
+
+  document.getElementById('buyerForm').style.display='none';
+  document.getElementById('successMsg').style.display='block';
+}
+
+init();
+</script>
+</body>
+</html>
