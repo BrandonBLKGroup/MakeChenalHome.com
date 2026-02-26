@@ -557,6 +557,9 @@ window.addEventListener('popstate',()=>{
 });
 
 init();
+
+// Page view tracking
+try{sb.from('page_views').insert([{domain:location.hostname,page:location.pathname+location.hash,referrer:document.referrer||null}]);}catch(e){}
 </script>
 </body>
 </html>
