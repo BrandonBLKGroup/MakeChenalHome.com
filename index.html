@@ -227,11 +227,8 @@ function initMap(parcels){
   // Draw individual parcel dots (slightly randomized so exact locations aren't revealed)
   parcels.forEach(p=>{
     if(!p.center_lat||!p.center_lng) return;
-    // Add small random offset (roughly 30-50 meters) to obscure exact address
-    const jitterLat = (Math.random()-0.5)*0.0006;
-    const jitterLng = (Math.random()-0.5)*0.0006;
-    const lat = p.center_lat + jitterLat;
-    const lng = p.center_lng + jitterLng;
+    const lat = p.center_lat;
+    const lng = p.center_lng;
     L.circleMarker([lat,lng],{
       radius:4,
       fillColor:'#444455',
