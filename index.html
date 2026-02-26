@@ -355,10 +355,13 @@ function showView(view){
   document.querySelectorAll('.page-view').forEach(v=>v.classList.remove('active'));
   document.getElementById(view+'View').classList.add('active');
   window.scrollTo(0,0);
-  // Build secondary maps on first visit
-  if(view==='buy'&&!mapsBuilt.buy){buildSecondaryMap('buyMap');mapsBuilt.buy=true;}
-  if(view==='sell'&&!mapsBuilt.sell){buildSecondaryMap('sellMap');mapsBuilt.sell=true;}
-  // Handle URL hash
+  // Build secondary maps after DOM is visible
+  if(view==='buy'&&!mapsBuilt.buy){
+    setTimeout(()=>{buildSecondaryMap('buyMap');mapsBuilt.buy=true;},50);
+  }
+  if(view==='sell'&&!mapsBuilt.sell){
+    setTimeout(()=>{buildSecondaryMap('sellMap');mapsBuilt.sell=true;},50);
+  }
   if(view==='landing') history.pushState(null,'',window.location.pathname);
   else history.pushState(null,'','#'+view);
 }
@@ -432,12 +435,14 @@ function buildLandingMap(){
 }
 
 function buildSecondaryMap(elemId){
+  const el=document.getElementById(elemId);
+  el.style.height='100%';el.style.width='100%';
   const m=L.map(elemId,{center:[34.78,-92.48],zoom:12,zoomControl:true,scrollWheelZoom:false});
   L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{maxZoom:18}).addTo(m);
   const bounds=drawMapContent(m);
-  if(bounds.length)m.fitBounds(bounds,{padding:[40,40]});
+  setTimeout(()=>{m.invalidateSize();if(bounds.length)m.fitBounds(bounds,{padding:[40,40]});},100);
   setTimeout(()=>{m.invalidateSize();if(bounds.length)m.fitBounds(bounds,{padding:[40,40]});},300);
-  setTimeout(()=>{m.invalidateSize();if(bounds.length)m.fitBounds(bounds,{padding:[40,40]});},600);
+  setTimeout(()=>{m.invalidateSize();if(bounds.length)m.fitBounds(bounds,{padding:[40,40]});},800);
 }
 
 function buildSubChecklist(gridId){
