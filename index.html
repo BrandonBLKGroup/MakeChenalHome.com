@@ -436,7 +436,8 @@ function buildSecondaryMap(elemId){
   L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{maxZoom:18}).addTo(m);
   const bounds=drawMapContent(m);
   if(bounds.length)m.fitBounds(bounds,{padding:[40,40]});
-  setTimeout(()=>m.invalidateSize(),100);
+  setTimeout(()=>{m.invalidateSize();if(bounds.length)m.fitBounds(bounds,{padding:[40,40]});},300);
+  setTimeout(()=>{m.invalidateSize();if(bounds.length)m.fitBounds(bounds,{padding:[40,40]});},600);
 }
 
 function buildSubChecklist(gridId){
