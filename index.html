@@ -63,11 +63,11 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 /* FORM SECTION */
 .form-section{background:linear-gradient(180deg,#0d1117 0%,#111 100%);padding:60px 24px}
 .form-section.buy-form{border-top:2px solid #00d4ff}
-.form-section.sell-form{border-top:2px solid #aa55ff}
+.form-section.sell-form{border-top:2px solid #00ff88}
 .form-container{max-width:640px;margin:0 auto}
 .form-section h2{font-size:28px;color:#fff;text-align:center;margin-bottom:8px}
 .form-section h2 em{color:#00ff88;font-style:normal}
-.form-section h2 .sell-em{color:#aa55ff}
+.form-section h2 .sell-em{color:#00ff88}
 .form-section .form-sub{color:#888;font-size:14px;text-align:center;max-width:520px;margin:0 auto 32px;line-height:1.6}
 .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
 .form-field{display:flex;flex-direction:column;gap:4px}
@@ -75,20 +75,20 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 .form-field label{font-size:11px;color:#888;text-transform:uppercase;letter-spacing:0.5px}
 .form-field input,.form-field select,.form-field textarea{background:#1a1a2e;border:1px solid #333;color:#fff;padding:12px 14px;border-radius:8px;font-size:14px;font-family:inherit;outline:none;transition:border-color 0.2s}
 .form-field input:focus,.form-field select:focus,.form-field textarea:focus{border-color:#00d4ff}
-.sell-form .form-field input:focus,.sell-form .form-field select:focus,.sell-form .form-field textarea:focus{border-color:#aa55ff}
+.sell-form .form-field input:focus,.sell-form .form-field select:focus,.sell-form .form-field textarea:focus{border-color:#00ff88}
 .form-field input::placeholder,.form-field textarea::placeholder{color:#555}
 .form-field select{cursor:pointer}
 .sub-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;max-height:240px;overflow-y:auto;padding:8px;background:#12121a;border:1px solid #333;border-radius:8px}
 .sub-check{display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:6px;cursor:pointer;transition:background 0.15s;font-size:13px;color:#ccc}
 .sub-check:hover{background:rgba(0,212,255,0.08)}
-.sell-form .sub-check:hover{background:rgba(170,85,255,0.08)}
+.sell-form .sub-check:hover{background:rgba(0,255,136,0.08)}
 .sub-check input{accent-color:#00d4ff;width:16px;height:16px;cursor:pointer}
-.sell-form .sub-check input{accent-color:#aa55ff}
+.sell-form .sub-check input{accent-color:#00ff88}
 .sub-check .sub-count{font-size:10px;color:#666;margin-left:auto}
 .submit-btn{width:100%;padding:16px;background:#00d4ff;color:#000;border:none;border-radius:8px;font-size:16px;font-weight:800;cursor:pointer;text-transform:uppercase;letter-spacing:1px;transition:all 0.2s;margin-top:20px}
 .submit-btn:hover{background:#33ddff;transform:translateY(-1px)}
-.submit-btn.sell-btn{background:#aa55ff}
-.submit-btn.sell-btn:hover{background:#cc88ff}
+.submit-btn.sell-btn{background:#00ff88;color:#000}
+.submit-btn.sell-btn:hover{background:#33ff99}
 .submit-btn:disabled{opacity:0.5;cursor:not-allowed;transform:none}
 .form-trust{text-align:center;margin-top:16px;font-size:12px;color:#555}
 .form-trust strong{color:#00ff88}
@@ -97,9 +97,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 .success-msg p{color:#aaa;font-size:14px;line-height:1.6}
 
 /* SELLER HERO */
-.sell-hero{background:linear-gradient(135deg,#0d1117 0%,#1a0d27 50%,#0d1117 100%);padding:48px 24px;text-align:center;border-bottom:1px solid #2a1a3a}
+.sell-hero{background:linear-gradient(135deg,#0d1117 0%,#0d1a0d 50%,#0d1117 100%);padding:48px 24px;text-align:center;border-bottom:1px solid #1a2a1a}
 .sell-hero h2{font-size:36px;color:#fff;margin-bottom:12px;line-height:1.2}
-.sell-hero h2 em{color:#aa55ff;font-style:normal}
+.sell-hero h2 em{color:#00ff88;font-style:normal}
 .sell-hero p{color:#999;font-size:16px;max-width:620px;margin:0 auto;line-height:1.6}
 
 /* BUYER HERO */
@@ -285,8 +285,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 
   <div class="map-section">
     <div id="sellMap"></div>
-    <div class="map-overlay" style="border-color:#aa55ff33">
-      <h3 style="color:#aa55ff">Buyer Demand</h3>
+    <div class="map-overlay">
+      <h3 style="color:#00ff88">Buyer Demand</h3>
       <p>Green zones show where registered buyers are actively looking. The more activity, the faster your property could sell off-market.</p>
     </div>
     <div class="map-legend">
@@ -327,7 +327,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
         <button type="submit" class="submit-btn sell-btn" id="sellSubmitBtn">Register My Property Off-Market</button>
       </form>
       <div class="success-msg" id="sellSuccessMsg">
-        <h3 style="color:#aa55ff">You're Registered!</h3>
+        <h3 style="color:#00ff88">You're Registered!</h3>
         <p>We're already checking our buyer database for matches in your neighborhood. Our team leader, Brandon Bruning, will reach out soon to discuss your property and the buyers we have lined up. No obligation, no pressure.</p>
       </div>
       <div class="form-trust"><strong>700+ homes sold</strong> in Central Arkansas. Your information is never shared publicly.</div>
