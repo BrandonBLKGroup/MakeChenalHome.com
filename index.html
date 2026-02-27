@@ -42,12 +42,12 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 
 /* MAP SECTION (shared) */
 .map-section{position:relative;height:450px}
-#map{width:100%;height:100%;background:#e8e8e8}
-.map-overlay{position:absolute;top:16px;right:16px;background:rgba(255,255,255,0.95);padding:16px 20px;border-radius:10px;z-index:1000;border:1px solid #ddd;max-width:260px;backdrop-filter:blur(8px)}
-.map-overlay h3{color:#111;font-size:12px;margin-bottom:6px;text-transform:uppercase;letter-spacing:1px}
-.map-overlay p{font-size:12px;color:#666;line-height:1.5}
-.map-legend{position:absolute;bottom:16px;left:16px;background:rgba(255,255,255,0.92);padding:12px 16px;border-radius:8px;z-index:1000;font-size:11px;border:1px solid #ddd}
-.map-legend .leg-title{font-weight:700;margin-bottom:6px;color:#111}
+#map{width:100%;height:100%;background:#0d0d15}
+.map-overlay{position:absolute;top:16px;right:16px;background:rgba(0,0,0,0.92);padding:16px 20px;border-radius:10px;z-index:1000;border:1px solid #333;max-width:260px;backdrop-filter:blur(8px)}
+.map-overlay h3{color:#00d4ff;font-size:12px;margin-bottom:6px;text-transform:uppercase;letter-spacing:1px}
+.map-overlay p{font-size:12px;color:#aaa;line-height:1.5}
+.map-legend{position:absolute;bottom:16px;left:16px;background:rgba(0,0,0,0.88);padding:12px 16px;border-radius:8px;z-index:1000;font-size:11px;border:1px solid #333}
+.map-legend .leg-title{font-weight:700;margin-bottom:6px;color:#fff}
 .map-legend .leg-item{display:flex;align-items:center;gap:8px;margin:4px 0}
 .map-legend .leg-dot{width:12px;height:12px;border-radius:50%}
 
@@ -127,7 +127,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 .pulse-marker{width:16px;height:16px;background:#00ff88;border-radius:50%;position:relative;box-shadow:0 0 8px rgba(0,255,136,0.5)}
 .pulse-marker::after{content:'';position:absolute;width:100%;height:100%;border-radius:50%;background:#00ff88;animation:pulse 2s infinite;top:0;left:0}
 @keyframes pulse{0%{transform:scale(1);opacity:0.5}100%{transform:scale(3);opacity:0}}
-.dark-tooltip{background:rgba(255,255,255,0.95)!important;color:#222!important;border:1px solid #ddd!important;border-radius:6px!important;padding:8px 12px!important;font-size:12px!important;box-shadow:0 4px 12px rgba(0,0,0,0.1)!important}
+.dark-tooltip{background:rgba(0,0,0,0.9)!important;color:#fff!important;border:1px solid #333!important;border-radius:6px!important;padding:8px 12px!important;font-size:12px!important;box-shadow:0 4px 12px rgba(0,0,0,0.5)!important}
 .dark-tooltip .leaflet-tooltip-tip{display:none}
 
 @media(max-width:640px){
@@ -412,11 +412,11 @@ function cleanName(s){return(s.display_name||s.name).replace('CHENAL VALLEY ',''
 function drawMapContent(map){
   const bounds=[];
   subdivisions.forEach(sub=>{
-    if(sub.boundary_geojson){try{L.geoJSON(sub.boundary_geojson,{style:{color:'#ccc',weight:1,fillOpacity:0.06,fillColor:'#00ff88'}}).addTo(map);}catch(e){}}
+    if(sub.boundary_geojson){try{L.geoJSON(sub.boundary_geojson,{style:{color:'#1a3a1a',weight:1,fillOpacity:0.08,fillColor:'#00ff88'}}).addTo(map);}catch(e){}}
   });
   parcels.forEach(p=>{
     if(!p.center_lat||!p.center_lng)return;
-    L.circleMarker([p.center_lat,p.center_lng],{radius:4,fillColor:'#999',fillOpacity:0.4,color:'#aaa',weight:0.5,opacity:0.3,interactive:false}).addTo(map);
+    L.circleMarker([p.center_lat,p.center_lng],{radius:4,fillColor:'#444455',fillOpacity:0.45,color:'#555566',weight:0.5,opacity:0.3,interactive:false}).addTo(map);
     bounds.push([p.center_lat,p.center_lng]);
   });
   subdivisions.forEach(sub=>{
@@ -444,7 +444,7 @@ function drawMapContent(map){
 
 function buildLandingMap(){
   const m=L.map('map',{center:[34.78,-92.48],zoom:12,zoomControl:true,scrollWheelZoom:false});
-  L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{maxZoom:18}).addTo(m);
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{maxZoom:18}).addTo(m);
   const bounds=drawMapContent(m);
   if(bounds.length)m.fitBounds(bounds,{padding:[40,40]});
 }
@@ -453,7 +453,7 @@ function buildSecondaryMap(elemId){
   const el=document.getElementById(elemId);
   el.style.height='100%';el.style.width='100%';
   const m=L.map(elemId,{center:[34.78,-92.48],zoom:12,zoomControl:true,scrollWheelZoom:false});
-  L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{maxZoom:18}).addTo(m);
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{maxZoom:18}).addTo(m);
   const bounds=drawMapContent(m);
   setTimeout(()=>{m.invalidateSize();if(bounds.length)m.fitBounds(bounds,{padding:[40,40]});},100);
   setTimeout(()=>{m.invalidateSize();if(bounds.length)m.fitBounds(bounds,{padding:[40,40]});},300);
