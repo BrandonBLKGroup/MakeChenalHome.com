@@ -111,7 +111,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 /* SELL BENEFITS */
 .sell-benefits{background:#fff;padding:40px 24px;border-bottom:1px solid #e0e0e0}
 .sell-benefits-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;max-width:800px;margin:0 auto}
-.sell-benefit{text-align:center;padding:24px 16px}
+.sell-benefit{text-align:center;padding:28px 20px;background:#fff;border:1px solid #e0e0e0;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,0.06);transition:all 0.25s}
+.sell-benefit:hover{transform:translateY(-3px);box-shadow:0 8px 24px rgba(0,0,0,0.1)}
 .sell-benefit .sb-icon{font-size:32px;margin-bottom:12px}
 .sell-benefit h4{color:#111;font-size:15px;margin-bottom:6px}
 .sell-benefit p{color:#888;font-size:12px;line-height:1.5}
@@ -124,8 +125,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 .footer{background:#fafafa;padding:20px 24px;text-align:center;font-size:11px;color:#999;border-top:1px solid #e0e0e0}
 
 /* ANIMATIONS */
-.pulse-marker{width:16px;height:16px;background:#00ff88;border-radius:50%;position:relative;box-shadow:0 0 8px rgba(0,255,136,0.5)}
-.pulse-marker::after{content:'';position:absolute;width:100%;height:100%;border-radius:50%;background:#00ff88;animation:pulse 2s infinite;top:0;left:0}
+.pulse-marker{width:16px;height:16px;background:#5B8A5A;border-radius:50%;position:relative;box-shadow:0 0 8px rgba(91,138,90,0.5)}
+.pulse-marker::after{content:'';position:absolute;width:100%;height:100%;border-radius:50%;background:#5B8A5A;animation:pulse 2s infinite;top:0;left:0}
 @keyframes pulse{0%{transform:scale(1);opacity:0.5}100%{transform:scale(3);opacity:0}}
 .dark-tooltip{background:rgba(0,0,0,0.9)!important;color:#fff!important;border:1px solid #333!important;border-radius:6px!important;padding:8px 12px!important;font-size:12px!important;box-shadow:0 4px 12px rgba(0,0,0,0.5)!important}
 .dark-tooltip .leaflet-tooltip-tip{display:none}
@@ -190,7 +191,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
     </div>
     <div class="map-legend">
       <div class="leg-title">MAP KEY</div>
-      <div class="leg-item"><div class="leg-dot" style="background:#00ff88;box-shadow:0 0 6px rgba(0,255,136,0.4)"></div>Homes Available Off Market!</div>
+      <div class="leg-item"><div class="leg-dot" style="background:#5B8A5A;box-shadow:0 0 6px rgba(91,138,90,0.4)"></div>Homes Available Off Market!</div>
       <div class="leg-item"><div class="leg-dot" style="background:#333;border:1px solid #555"></div>Neighborhood</div>
     </div>
   </div>
@@ -221,7 +222,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
     </div>
     <div class="map-legend">
       <div class="leg-title">MAP KEY</div>
-      <div class="leg-item"><div class="leg-dot" style="background:#00ff88;box-shadow:0 0 6px rgba(0,255,136,0.4)"></div>Homes Available Off Market!</div>
+      <div class="leg-item"><div class="leg-dot" style="background:#5B8A5A;box-shadow:0 0 6px rgba(91,138,90,0.4)"></div>Homes Available Off Market!</div>
       <div class="leg-item"><div class="leg-dot" style="background:#333;border:1px solid #555"></div>Neighborhood</div>
     </div>
   </div>
@@ -295,12 +296,12 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
   <div class="map-section">
     <div id="sellMap"></div>
     <div class="map-overlay">
-      <h3 style="color:#00ff88">Buyer Demand</h3>
+      <h3 style="color:#5B8A5A">Buyer Demand</h3>
       <p>Green zones show where registered buyers are actively looking. The more activity, the faster your property could sell off-market.</p>
     </div>
     <div class="map-legend">
       <div class="leg-title">MAP KEY</div>
-      <div class="leg-item"><div class="leg-dot" style="background:#00ff88;box-shadow:0 0 6px rgba(0,255,136,0.4)"></div>Active Buyer Interest</div>
+      <div class="leg-item"><div class="leg-dot" style="background:#5B8A5A;box-shadow:0 0 6px rgba(91,138,90,0.4)"></div>Active Buyer Interest</div>
       <div class="leg-item"><div class="leg-dot" style="background:#333;border:1px solid #555"></div>Neighborhood</div>
     </div>
   </div>
@@ -334,15 +335,15 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
           <div class="form-field full"><label>Tell Us About Your Property</label><textarea id="sellNotes" rows="3" placeholder="Square footage, recent updates, lot size, anything special about your house..."></textarea></div>
           <div class="form-field full" style="margin-top:8px">
             <label class="sub-check" style="padding:10px 12px;background:#12121a;border:1px solid #333;border-radius:8px;font-size:14px;color:#ccc">
-              <input type="checkbox" id="sellOptIn30Day" style="accent-color:#00ff88;width:18px;height:18px;cursor:pointer">
-              <span>Yes, I would like to receive a copy of The BLK Group's <strong style="color:#00ff88">30 Day Marketing Strategy</strong></span>
+              <input type="checkbox" id="sellOptIn30Day" style="accent-color:#5B8A5A;width:18px;height:18px;cursor:pointer">
+              <span>Yes, I would like to receive a copy of The BLK Group's <strong style="color:#5B8A5A">30 Day Marketing Strategy</strong></span>
             </label>
           </div>
         </div>
         <button type="submit" class="submit-btn sell-btn" id="sellSubmitBtn">Register My Property Off-Market</button>
       </form>
       <div class="success-msg" id="sellSuccessMsg">
-        <h3 style="color:#00ff88">You're Registered!</h3>
+        <h3 style="color:#5B8A5A">You're Registered!</h3>
         <p>We're already checking our buyer database for matches in your neighborhood. Our team leader, Brandon Bruning, will reach out soon to discuss your property and the buyers we have lined up. No obligation, no pressure.</p>
       </div>
       <div class="form-trust"><strong>700+ homes sold</strong> in Central Arkansas. Your information is never shared publicly.</div>
@@ -412,7 +413,7 @@ function cleanName(s){return(s.display_name||s.name).replace('CHENAL VALLEY ',''
 function drawMapContent(map){
   const bounds=[];
   subdivisions.forEach(sub=>{
-    if(sub.boundary_geojson){try{L.geoJSON(sub.boundary_geojson,{style:{color:'#1a3a1a',weight:1,fillOpacity:0.08,fillColor:'#00ff88'}}).addTo(map);}catch(e){}}
+    if(sub.boundary_geojson){try{L.geoJSON(sub.boundary_geojson,{style:{color:'#1a3a1a',weight:1,fillOpacity:0.08,fillColor:'#5B8A5A'}}).addTo(map);}catch(e){}}
   });
   parcels.forEach(p=>{
     if(!p.center_lat||!p.center_lng)return;
@@ -424,7 +425,7 @@ function drawMapContent(map){
     if(sub.center_lat&&sub.center_lng){
       const sz=Math.min(24,Math.max(10,count/5));
       const icon=L.divIcon({className:'',html:`<div class="pulse-marker" style="width:${sz}px;height:${sz}px"></div>`,iconSize:[sz,sz]});
-      L.marker([sub.center_lat,sub.center_lng],{icon}).bindTooltip(`${cleanName(sub)}<br><span style="color:#00ff88">${count} properties</span>`,{className:'dark-tooltip'}).addTo(map);
+      L.marker([sub.center_lat,sub.center_lng],{icon}).bindTooltip(`${cleanName(sub)}<br><span style="color:#5B8A5A">${count} properties</span>`,{className:'dark-tooltip'}).addTo(map);
     }
   });
   const bigPulseSubs=[...subdivisions].filter(s=>s.center_lat&&s.center_lng&&(subCounts[s.id]||0)>10);
